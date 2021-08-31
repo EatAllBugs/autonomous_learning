@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<launch>
+  <arg name="mav_name"            default="multirotor"/>
+  <arg name="color"               default="White"/>
+  <arg name="x"                   default="0"/>
+  <arg name="y"                   default="0"/>
+  <arg name="z"                   default="0.1"/>
+  <arg name="yaw"                 default="0"/>
+  <arg name="debug"               default="false"/>
+
+  <!-- Start Simulator -->
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="paused" value="false"/>
+    <arg name="gui" value="true"/>
+    <arg name="verbose" value="false"/>
+    <arg name="debug" value="$(arg debug)"/>
+  </include>
+
+  <!-- Spawn Model in Gazebo -->
+  <include file="$(find roscopter_sim)/launch/spawn_mav.launch">
+    <arg name="mav_name"            value="$(arg mav_name)" />
+    <arg name="model"               value="$(find roscopter_sim)/xacro/$(arg mav_name).urdf.xacro" />
+    <arg name="x"                   value="$(arg x)"/>
+    <arg name="y"                   value="$(arg y)"/>
+    <arg name="z"                   value="$(arg z)"/>
+    <arg name="yaw"                 value="$(arg yaw)"/>
+    <arg name="color"               value="$(arg color)"/>
+  </include>
+
+  <!--<node pkg="topic_tools" type="throttle" name="throttle" args="messages /multirotor/ground_truth/odometry/NED 1000"/>-->
+
+  <!-- Controller -->
+  <group ns="$(arg mav_name)">
+
+    <!-- Load common parameters -->
+    <rosparam command="load" file="$(find roscopter_sim)/params/$(arg mav_name).yaml"/>
+    <rosparam command="load" file="$(find lqr_controller)/params/sim_lqr_params.yaml"/>
+
+    <!--LQR Controller-->
+    <node pkg="lqr_controller" type="lqr_controller" name="lqr_controller" output="screen">
+      <remap from="estimate" to="ground_truth/odometry/NED"/>
+      <remap from="imu_data" to="imu/data"/>
+      <remap from="command" to ="command"/>
+    </node>
+
+  </group>
+
+</launch>
