@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>traj</name>
+  <version>0.0.0</version>
+  <description>Python library for trjactory manipulation</description>
+
+  <maintainer email="jon.binney@gmail.com">Jon Binney</maintainer>
+  <maintainer email="mahmud.a.aly@gmail.com">mahmoud ali</maintainer>
+
+  <license>Apache 2.0</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <exec_depend>python-matplotlib</exec_depend>
+  <exec_depend>python-numpy</exec_depend>
+  <exec_depend>python-sympy</exec_depend>
+</package>
