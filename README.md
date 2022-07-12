@@ -46,6 +46,8 @@
 5. Lattice planner
 6. EM
 
+### path_smoother
+
 ## Control
 
 1. PID control
